@@ -17,7 +17,7 @@ def fetch_data_from_url(url):
     xml_response = requests.get(url)
        
     if xml_response.status_code != 200:
-        raise Exception("Data is not available for given input")
+        raise ValueError("Data is not available for given input")
     
     with open("input_file.xml", "wb") as f:
         f.write(xml_response.content)
@@ -38,7 +38,7 @@ def fetch_data_from_url(url):
             
         
     data_frame = pd.DataFrame.from_dict(conversion_dict)
-    print(data_frame.to_string(index=False))
+    # print(data_frame.to_string(index=False))
 
     os.remove("input_file.xml")
 
@@ -82,7 +82,7 @@ def get_data(identifier: str, target_currency: str = None) -> pd.DataFrame:
         raw_data = get_raw_data(identifier)
 
         raw_data['OBS_VALUE'] = exchange_rate_data['OBS_VALUE']*raw_data['OBS_VALUE']
-        print(raw_data.to_string(index=False))
+        #print(raw_data.to_string(index=False))
         return raw_data
 
 
