@@ -1,8 +1,11 @@
+"""
+Excercise # 3 - Aggregation
+
+Goal is to deduce the formula as per string input and apply calculcations accordingly
+"""
+
 import pandas as pd
 from xml.dom.minidom import parse
-import xml.dom.minidom
-import os
-import requests
 from typing import Dict
 import re
 
@@ -13,17 +16,45 @@ def get_transactions(identifier: str) -> pd.DataFrame:
     
     Description
     -----------
-
+    Function will fetch the transaction data from the appropriate URL and convert it to a pandas DataFrame, with
+    columns IDENTIFIER, TIME_PERIOD and OBS_VALUE, corresponding to values of the identifier parameter,
+    generic:ObsDimension tag and generic:ObsValue tag from the XML. OBS_VALUE should be converted to
+    float.
 
     Parameters
     -----------
 
+    identifier: str
+        it's string parameter to be replaced in the url to get the desired data
+
     Return 
     -----------
+
+    Pandas Daraframe
+        Pandas Dataframe (N x 3)
 
     Test Cases
 
     -----------
+
+    >>> type(get_transactions("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N"))
+    <class 'pandas.core.frame.DataFrame'>
+
+    >>> get_transactions("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[0]
+    'IDENTIFIER'
+
+    >>> get_transactions("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[1]
+    'TIME_PERIOD'
+
+    >>> get_transactions("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[2]
+    'OBS_VALUE'
+
+    >>> type(get_transactions("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N").loc[2].at["OBS_VALUE"])
+    <class 'numpy.float64'>
+
+    >>> get_transactions("TUY")
+    Traceback (most recent call last):
+    requests.exceptions.HTTPError: Data is not available for given input
     
     """
 
@@ -39,21 +70,60 @@ def get_formula_data(formula: str) -> pd.DataFrame:
     
     Description
     -----------
-
+    This function first extract individual identifiers from the formula supplied
+    and then get the transactions amount from the URL based on the identifiers
 
     Parameters
     -----------
+    formula: str
+        mathamatical formula in string
 
     Return 
     -----------
 
+    Pandas Daraframe
+        Pandas Dataframe (N x M)
+
     Test Cases
 
     -----------
+
+    >>> type(get_formula_data("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                                    Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                                    Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N"))
+    <class 'pandas.core.frame.DataFrame'>
+
+    >>> get_formula_data("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[0]
+    'TIME_PERIOD'
+
+    >>> get_formula_data("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[1]
+    'Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N'
+
+    >>> get_formula_data("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[2]
+    'Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N'
+
+    >>> type(get_formula_data("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").loc[2].at["Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N"])
+    <class 'numpy.float64'>
+
+    >>> get_formula_data("TUY")
+    Traceback (most recent call last):
+    ValueError: formula syntax is not correct
+    
     
     """
     
     identifier = re.split(r'[=+-]', formula)
+
+    if len(identifier) < 3:
+        raise ValueError("formula syntax is not correct")
 
     identifier_list = [content.strip(" ") for content in identifier][1:]
     
@@ -81,29 +151,64 @@ def get_formula_data(formula: str) -> pd.DataFrame:
 
 def compute_aggregates(formula: str) -> pd.DataFrame:
     """
-
+    
     
     Description
     -----------
 
+    This will first deduce the formula based on the other functions and then apply it on the
+    data and compute it.
 
     Parameters
-    -----------
+    ----------
+
+    formula: str
+        mathamatical formula in string
 
     Return 
     -----------
 
+    Pandas Daraframe
+        Pandas Dataframe (N x M)
+
     Test Cases
 
     -----------
+
+    >>> type(compute_aggregates("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                                  Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                                  Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N"))
+    <class 'pandas.core.frame.DataFrame'>
+
+    >>> compute_aggregates("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[0]
+    'TIME_PERIOD'
+
+    >>> compute_aggregates("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").columns[1]
+    'Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N'
+
+   
+    >>> type(compute_aggregates("Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N = \
+                          Q.N.I8.W1.S1P.S1.T.A.FA.D.F._Z.EUR._T._X.N + \
+                          Q.N.I8.W1.S1Q.S1.T.A.FA.D.F._Z.EUR._T._X.N").loc[1].at["Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N"])
+    <class 'numpy.float64'>
+
+    >>> compute_aggregates("TUY")
+    Traceback (most recent call last):
+    ValueError: formula syntax is not correct
     
     """
     identifier = re.split(r'[=+-]', formula)
+    
+    if len(identifier) < 3:
+        raise ValueError("formula syntax is not correct")
 
     identifier_list = [content.strip(" ") for content in identifier][1:]
 
     compute_column = identifier[0].strip(" ")
-    print(identifier_list)
     operators = []
 
     for char in formula:
@@ -116,9 +221,7 @@ def compute_aggregates(formula: str) -> pd.DataFrame:
     
     count = 0
     data_frame[compute_column] = data_frame[identifier_list[count]]
-    print(data_frame[compute_column].head(2))
     for operation in operators:
-        print("in")
         if operation == "+":
             data_frame[compute_column] += data_frame[identifier_list[count+1]] 
         if operation == "-":

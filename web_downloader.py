@@ -77,7 +77,7 @@ def fetch_data_from_url(url: str) -> pd.DataFrame:
             
         
     data_frame = pd.DataFrame.from_dict(conversion_dict)
-    # print(data_frame.to_string(index=False))
+    
 
     os.remove("input_file.xml")
 
