@@ -8,7 +8,7 @@ Each and every function has description in docstring and test cases are also cov
 
 run test cases for any python source file
 
-python3 -m doctest -v <filename.py>
+    python3 -m doctest -v <filename.py>
 
 example - to test web_downloader.py run below command
 
