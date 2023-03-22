@@ -39,7 +39,7 @@ To run the code please use below command-
 It has total 13 test cases and with below command we can execute test suits-
     python3 -m doctest -v asymmetry_check.py
 
-Excercise # 2: Aggregation
+Excercise # 3: Aggregation
 
 to run the code please use below command-
     python3 aggregation.py
@@ -47,4 +47,3 @@ to run the code please use below command-
 it has total 17 test cases and with below command we can execute test suits-
     python3 -m doctest -v aggregation.py
 
-    
