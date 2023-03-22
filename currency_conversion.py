@@ -6,46 +6,24 @@ from xml.dom.minidom import parse
 import xml.dom.minidom
 import os
 import requests
-
-
-
-def fetch_data_from_url(url):
-    """
-    
-    """
-
-    xml_response = requests.get(url)
-       
-    if xml_response.status_code != 200:
-        raise ValueError("Data is not available for given input")
-    
-    with open("input_file.xml", "wb") as f:
-        f.write(xml_response.content)
-    
-    DOMTree = xml.dom.minidom.parse("input_file.xml")
-    collection = DOMTree.documentElement
-    parent_tag = collection.getElementsByTagName("generic:Obs")
-
-    conversion_dict = {'TIME_PERIOD':[], 'OBS_VALUE':[]}
-    for element in parent_tag:
-        obs_dimention = element.getElementsByTagName("generic:ObsDimension")
-        obs_value = element.getElementsByTagName("generic:ObsValue")
-        for value in obs_dimention:
-            conversion_dict['TIME_PERIOD'].append(value.getAttribute("value"))
-            
-        for value in obs_value:
-            conversion_dict['OBS_VALUE'].append(float(value.getAttribute("value")))
-            
-        
-    data_frame = pd.DataFrame.from_dict(conversion_dict)
-    # print(data_frame.to_string(index=False))
-
-    os.remove("input_file.xml")
-
-    return data_frame
+from web_downloader import fetch_data_from_url
 
 def get_exchange_rate(source: str, target: str = "EUR") -> pd.DataFrame:
     """
+
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
     
     """
     url = 'https://sdw-wsrest.ecb.europa.eu/service/data/EXR/M.GBP.EUR.SP00.A?detail=dataonly'
@@ -61,6 +39,21 @@ def get_exchange_rate(source: str, target: str = "EUR") -> pd.DataFrame:
 def get_raw_data(identifier: str) -> pd.DataFrame:
     """
     
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
+    
     """
     url = 'https://sdw-wsrest.ecb.europa.eu/service/data/BP6/M.N.I8.W1.S1.S1.T.N.FA.F.F7.T.EUR._T.T.N?detail=dataonly'
     url = url.replace("M.N.I8.W1.S1.S1.T.N.FA.F.F7.T.EUR._T.T.N", identifier)
@@ -70,6 +63,21 @@ def get_raw_data(identifier: str) -> pd.DataFrame:
 
 def get_data(identifier: str, target_currency: str = None) -> pd.DataFrame:
     """
+    
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
     if target_currency == None:
         data_frame = get_raw_data(identifier)

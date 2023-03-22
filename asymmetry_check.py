@@ -10,6 +10,20 @@ from currency_conversion import fetch_data_from_url
 def get_transactions(identifier: str) -> pd.DataFrame:
     """
     
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
 
     url = "https://sdw-wsrest.ecb.europa.eu/service/data/BSI/Q.HR.N.A.A20.A.1.AT.2000.Z01.E?detail=dataonly"
@@ -21,6 +35,22 @@ def get_transactions(identifier: str) -> pd.DataFrame:
 
 def get_symmetric_identifier(identifier: str, swap_components: Dict[int,int]) -> str:
     """
+
+    
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
     list_str = identifier.split(".")
     
@@ -31,6 +61,21 @@ def get_symmetric_identifier(identifier: str, swap_components: Dict[int,int]) ->
 
 def get_asymmetries(identifier: str, swap_components: Dict[int, int]) -> pd.DataFrame:
     """
+    
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
     symmetric_identifier = get_symmetric_identifier(identifier, swap_components)
     provided_df  = get_transactions(identifier)

@@ -11,6 +11,20 @@ from web_downloader import fetch_data_from_url
 def get_transactions(identifier: str) -> pd.DataFrame:
     """
     
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
 
     url = "https://sdw-wsrest.ecb.europa.eu/service/data/BP6/Q.N.I8.W1.S1.S1.T.A.FA.D.F._Z.EUR._T._X.N?detail=dataonly"
@@ -22,6 +36,20 @@ def get_transactions(identifier: str) -> pd.DataFrame:
 
 def get_formula_data(formula: str) -> pd.DataFrame:
     """
+    
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
     
     """
     
@@ -53,6 +81,22 @@ def get_formula_data(formula: str) -> pd.DataFrame:
 
 def compute_aggregates(formula: str) -> pd.DataFrame:
     """
+
+    
+    Description
+    -----------
+
+
+    Parameters
+    -----------
+
+    Return 
+    -----------
+
+    Test Cases
+
+    -----------
+    
     """
     identifier = re.split(r'[=+-]', formula)
 
